@@ -5,7 +5,7 @@ import numpy as np
 import time
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
-LABELS = ["No DR", "Mild", "Moderate", "Severe", "Proliferative DR"]
+LABELS = ["No DR", "Mild DR", "Moderate DR", "Severe DR", "Proliferative DR"]
 BATCH_SIZE = 8
 IMAGE_SIZE = [320, 320]
 
@@ -37,7 +37,7 @@ def predict(img):
     prediction = model.predict(ds)
 
     number = str(round(100 * prediction[0][np.argmax(prediction[0])], 2))
-    predicted_label = f"This image is {number}% {LABELS[np.argmax(prediction)]} DR"
+    predicted_label = f"This image is {LABELS[np.argmax(prediction)]} with confidence: {number}%"
 
     st.success(predicted_label)
 
@@ -45,9 +45,12 @@ def predict(img):
 f = st.file_uploader("Please upload an image", type=["jpg", "png"])
 
 if f is not None:
-    image = Image.open(f)
+    f1 = open('/usr/src/app/test.png', 'wb')
+    f1.write(f.read())
+    f1.close()
+    image = Image.open('/usr/src/app/test.png')
     st.image(image, caption="Uploaded Image", use_column_width=True)
 
     start = time.time()
-    predict(f.name)
+    predict('/usr/src/app/test.png')
     st.info("Prediction time is {:.2f} seconds".format(time.time() - start))
