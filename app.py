@@ -42,7 +42,7 @@ def predict(img):
     st.success(predicted_label)
 
 
-f = st.file_uploader("Please upload an image", type=["jpg", "png"])
+f = st.file_uploader("Please upload an image", type=["jpg", "png", "jpeg"])
 
 if f is not None:
     f1 = open('/usr/src/app/test.png', 'wb')
