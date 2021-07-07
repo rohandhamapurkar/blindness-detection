@@ -9,11 +9,13 @@ LABELS = ["No DR", "Mild DR", "Moderate DR", "Severe DR", "Proliferative DR"]
 BATCH_SIZE = 8
 IMAGE_SIZE = [320, 320]
 
-model = tf.keras.models.load_model("model.h5")
+@st.cache(allow_output_mutation=True)
+def get_model():
+    model = tf.keras.models.load_model("model.h5")
+    return model
 
 st.write("# Blindness Detection")
 st.write("This web app detects diabetic retinopathy in fundus photographs")
-
 
 def predict(img):
 
@@ -33,6 +35,8 @@ def predict(img):
 
     ds = ds.map(preprocess, num_parallel_calls=AUTOTUNE)
     ds = ds.batch(BATCH_SIZE)
+
+    model = get_model()
 
     prediction = model.predict(ds)
 
